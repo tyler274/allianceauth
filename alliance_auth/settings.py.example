@@ -35,6 +35,7 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 # Application definition
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,6 +123,8 @@ TEMPLATE_DIRS = (
 STATICFILES_DIRS = (
     'static',
 )
+
+STATIC_ROOT = 'static-serve'
 
 LOGIN_URL = '/login_user/'
 
