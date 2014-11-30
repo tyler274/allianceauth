@@ -10,3 +10,11 @@ class SrpFleetMainForm(forms.Form):
 class SrpFleetUserRequestForm(forms.Form):
     killboard_link = forms.CharField(required=True, label="Killboard Link")
     additional_info = forms.CharField(required=False, label="Additional Info")
+
+
+class SrpFleetUpdateCostForm(forms.Form):
+    srp_total_amount = forms.IntegerField(required=True, label="Total SRP Amount")
+
+
+class SrpFleetMainUpdateForm(forms.Form):
+    fleet_aar_link = forms.CharField(required=True, label="After Action Report Link")

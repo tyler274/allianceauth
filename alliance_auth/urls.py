@@ -140,6 +140,7 @@ urlpatterns = patterns('',
                        url(r'^srp_fleet_view/(\w+)$', 'srp.views.srp_fleet_view', name='auth_srp_fleet_view'),
                        url(r'^srp_fleet_add_view/$', 'srp.views.srp_fleet_add_view', name='auth_srp_fleet_add_view'),
                        url(r'^srp_fleet_remove/(\w+)$', 'srp.views.srp_fleet_remove', name='auth_srp_flet_remove'),
+                       url(r'^srp_fleet_edit/(\w+)$', 'srp.views.srp_fleet_edit_view', name='auth_srp_fleet_edit_view'),
                        url(r'^srp_fleet_mark_completed/(\w+)', 'srp.views.srp_fleet_mark_completed',
                            name='auth_srp_fleet_mark_completed'),
                        url(r'^srp_fleet_mark_uncompleted/(\w+)', 'srp.views.srp_fleet_mark_uncompleted',
@@ -150,5 +151,7 @@ urlpatterns = patterns('',
                        url(r'srp_request_approve/(\w+)', 'srp.views.srp_request_approve',
                            name='auth_srp_request_approve'),
                        url(r'srp_request_reject/(\w+)', 'srp.views.srp_request_reject', name='auth_srp_request_reject'),
+                       url(r'srp_request_amount_update/(\w+)', 'srp.views.srp_request_update_amount_view',
+                           name="auth_srp_request_update_amount_view")
 
 )
