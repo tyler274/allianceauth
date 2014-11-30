@@ -11,4 +11,4 @@ python manage.py celeryd &
 python manage.py celerybeat &
 
 #python manage.py runserver &
-gunicorn_django --workers=5 --bind 127.0.0.1:8000 &
+gunicorn_django --workers=5 --bind 127.0.0.1:8000 --reload True &
