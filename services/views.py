@@ -24,6 +24,9 @@ from forms import JabberBroadcastForm
 from forms import FleetFormatterForm
 from util import check_if_user_has_permission
 
+from django.conf import settings
+import json
+
 
 @login_required
 def fleet_formatter_view(request):
@@ -306,3 +309,23 @@ def reset_teamspeak3_perm(request):
         update_teamspeak3_groups(request.user)
         return HttpResponseRedirect("/services/")
     return HttpResponseRedirect("/")
+
+@login_required
+def jabber_web_view(request):
+    authinfo = AuthServicesInfoManager.get_auth_service_info(request.user)
+    if authinfo.jabber_username != "":
+        json_data = json.dumps({'jid' : authinfo.jabber_username + '@' + settings.JABBER_URL , 'pass' : authinfo.jabber_password})  
+        context = {"json_data":json_data}
+    else:
+        if authinfo.main_char_id != "":
+            character = EveManager.get_character_by_id(authinfo.main_char_id)
+            info = OpenfireManager.add_user(character.character_name)
+            # If our username is blank means we already had a user
+            if info[0] is not "":
+                AuthServicesInfoManager.update_user_jabber_info(info[0], info[1], request.user)
+                update_jabber_groups(request.user)
+                json_data = json.dumps({'jid' : authinfo.jabber_username + '@' + settings.JABBER_URL , 'pass' : authinfo.jabber_password})  
+                context = {"json_data":json_data}
+        context = {}
+
+    return render_to_response('registered/jabberweb.html', context, context_instance=RequestContext(request))
