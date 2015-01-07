@@ -182,7 +182,7 @@ def run_api_refresh():
         if EveApiManager.check_if_api_server_online():
             api_key_pairs = EveManager.get_api_key_pairs(user.id)
             if api_key_pairs:
-                valid_key = False
+                valid_key = []
                 authserviceinfo = AuthServicesInfo.objects.get(user=user)
 
                 print 'Running update on user: ' + user.username
@@ -195,29 +195,55 @@ def run_api_refresh():
                                 characters = EveApiManager.get_characters_from_api(api_key_pair.api_id,
                                                                                    api_key_pair.api_key)
                                 EveManager.update_characters_from_list(characters)
-                                valid_key = True
+
+                                for character in characters:
+                                    if character == EveManager.get_character_by_id(authserviceinfo.main_char_id):
+                                        # Check our main character
+                                        corp = EveManager.get_corporation_info_by_id(character.corporation_id)
+                                        main_alliance_id = EveManager.get_charater_alliance_id_by_id(authserviceinfo.main_char_id)
+                                        if main_alliance_id == settings.ALLIANCE_ID:
+                                            #pass
+                                            print 'success'
+                                            break
+                                        elif corp is not None:
+                                            if corp.is_blue is not True:
+                                                print 'not in corp or blue'
+                                                deactivate_services(user)
+                                        else:
+                                            print 'failed checks'
+                                            deactivate_services(user)
+
+                                valid_key.append(True)
                             else:
+                                valid_key.append(False)
                                 EveManager.delete_characters_by_api_id(api_key_pair.api_id, user)
                                 EveManager.delete_api_key_pair(api_key_pair.api_id, api_key_pair.api_key)
 
-                        if valid_key:
-                            # Check our main character
-                            character = EveManager.get_character_by_id(authserviceinfo.main_char_id)
-                            corp = EveManager.get_corporation_info_by_id(character.corporation_id)
-                            main_alliance_id = EveManager.get_charater_alliance_id_by_id(authserviceinfo.main_char_id)
-                            if main_alliance_id == settings.ALLIANCE_ID:
-                                pass
-                            elif corp is not None:
-                                if corp.is_blue is not True:
-                                    deactivate_services(user)
-                            else:
-                                deactivate_services(user)
-                        else:
+                        if True in valid_key:
+                            print 'User has valid key'
+                        else: 
+                            print 'User has no valid keys'
                             # nuke it
                             deactivate_services(user)
+
+                        #if valid_key:
+                        #    # Check our main character
+                        #    character = EveManager.get_character_by_id(authserviceinfo.main_char_id)
+                        #    corp = EveManager.get_corporation_info_by_id(character.corporation_id)
+                        #    main_alliance_id = EveManager.get_charater_alliance_id_by_id(authserviceinfo.main_char_id)
+                        #    if main_alliance_id == settings.ALLIANCE_ID:
+                        #        pass
+                        #    elif corp is not None:
+                        #        if corp.is_blue is not True:
+                        #            deactivate_services(user)
+                        #    else:
+                        #        deactivate_services(user)
+                        #else:
+                        #    # nuke it
+                        #    deactivate_services(user)
                 else:
                     print 'No main_char_id set'
-
+                    
 
 # Run Every 2 hours
 @periodic_task(run_every=crontab(minute=0, hour="*/2"))
