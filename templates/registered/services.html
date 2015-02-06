@@ -154,6 +154,7 @@
             {% endif %}
         </table>
     {% elif perms.auth.alliance_member %}
+    <div class="table-responsive">
         <table class="table table-bordered">
             <tr>
                 <th class="text-center">Service</th>
@@ -316,7 +317,8 @@
 	                    
 	                </td>
 	            </tr>
-        </table>
+            </table>
+    </div>
     {% else %}
         <div class="alert alert-danger" role="alert">You are not in the alliance</div>
     {% endif %}

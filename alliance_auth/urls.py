@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
 
+from util.admin_auth import *
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -90,6 +92,10 @@ urlpatterns = patterns('',
                        url(r'^serivces/jabber_broadcast/$', 'services.views.jabber_broadcast_view',
                            name='auth_jabber_broadcast_view'),
 
+		       #Jabber webchat
+		       url(r'^chat/$', 'services.views.jabber_web_view',
+                           name='auth_jabber_web_view'),
+
                        # Forum Service Control
                        url(r'^activate_forum/$', 'services.views.activate_forum', name='auth_activate_forum'),
                        url(r'^deactivate_forum/$', 'services.views.deactivate_forum', name='auth_deactivate_forum'),
@@ -154,4 +160,8 @@ urlpatterns = patterns('',
                        url(r'srp_request_amount_update/(\w+)', 'srp.views.srp_request_update_amount_view',
                            name="auth_srp_request_update_amount_view")
 
+)
+
+urlpatterns += patterns('loginas.views',
+    url(r"^login/user/(?P<user_id>.+)/$", "user_login", name="loginas-user-login"),
 )

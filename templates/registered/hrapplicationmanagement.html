@@ -8,131 +8,155 @@
 {% block extra_css %}{% endblock extra_css %}
 
 {% block content %}
-    <div class="col-lg-12">
-        {% if not perms.auth.alliance_member %}
-            <h1 class="page-header text-center">Personal Applications
-                <div class="text-right">
-                    <a href="{% url 'auth_hrapplication_create_view' %}">
-                        {% if personal_app %}
-                            <button type="button" class="btn btn-success" disabled>Create Application</button>
-                        {% else %}
-                            <button type="button" class="btn btn-success">Create Application</button>
-                        {% endif %}
-                    </a>
-                </div>
-            </h1>
-            <table class="table table-bordered">
-                <tr>
-                    <th class="text-center">Application ID</th>
-                    <th class="text-center">Username</th>
-                    <th class="text-center">Main Character</th>
-                    <th class="text-center">Corporation
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-                {% for personal_app in personal_apps %}
-                    <tr>
-                        <td class="text-center">{{ personal_app.id }}</td>
-                        <td class="text-center">{{ personal_app.user.username }}</td>
-                        <td class="text-center">{{ personal_app.character_name }}</td>
-                        <td class="text-center">{{ personal_app.corp.corporation_name }}</td>
-                        <td class="text-center">
-                            {% if personal_app.approved_denied == None %}
-                                <div class="panel panel-warning" role="alert">Pending</div>
-                            {% elif  personal_app.approved_denied == True %}
-                                <div class="panel panel-success" role="alert">Approved</div>
-                            {% else %}
-                                <div class="panel panel-danger" role="alert">Rejected</div>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            <a href="/hr_application_personal_view/{{ personal_app.id }}">
-                                <button type="button" class="btn btn-primary"><span
-                                        class="glyphicon glyphicon-eye-open"></span></button>
-                            </a>
+	<div class="col-lg-12">
 
-                            {% if personal_app.approved_denied == None %}
-                                <a href="/hr_application_personal_removal/{{ personal_app.id }}">
-                                    <button type="button" class="btn btn-danger"><span
-                                            class="glyphicon glyphicon-remove"></span></button>
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
-        {% if perms.auth.human_resources %}
-            <h1 class="page-header text-center">Application Management
-                <div class="text-right">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-                        Search Applications
-                    </button>
-                </div>
-            </h1>
-            <div class="container-fluid">
-                <table class="table table-bordered">
-                    <tr>
-                        <th class="text-center">Application ID</th>
-                        <th class="text-center">Username</th>
-                        <th class="text-center">Main Character</th>
-                        <th class="text-center">Corporation</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                    {% for app in applications %}
-                        <tr>
-                            <td class="text-center">{{ app.id }}</td>
-                            <td class="text-center">{{ app.user.username }}</td>
-                            <td class="text-center">{{ app.character_name }}</td>
-                            <td class="text-center">{{ app.corp.corporation_name }}</td>
-                            <td class="text-center">
-                                {% if app.approved_denied == None %}
-                                    <div class="panel panel-warning" role="alert">Pending</div>
-                                {% elif  app.approved_denied == True %}
-                                    <div class="panel panel-success" role="alert">Approved</div>
-                                {% else %}
-                                    <div class="panel panel-danger" role="alert">Rejected</div>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <a href="/hr_application_view/{{ app.id }}">
-                                    <button type="button" class="btn btn-primary"><span
-                                            class="glyphicon glyphicon-eye-open"></span></button>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        {% endif %}
-    </div>
+			<h1 class="page-header text-center">Personal Applications
+				<div class="text-right">
+					<a href="{% url 'auth_hrapplication_create_view' %}">
+						{% if personal_app %}
+							<button type="button" class="btn btn-success" disabled>Create Application</button>
+						{% else %}
+							<button type="button" class="btn btn-success">Create Application</button>
+						{% endif %}
+					</a>
+				</div>
+			</h1>
+			<table id="app1" class="tablesorter table table-bordered">
+				<thead>
+				<tr>
+					<th class="text-center">Application ID</th>
+					<th class="text-center">Username</th>
+					<th class="text-center">Main Character</th>
+					<th class="text-center">Corporation
+					<th class="text-center">Status</th>
+					<th class="text-center">Actions</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for personal_app in personal_apps %}
+					<tr>
+						<td class="text-center">{{ personal_app.id }}</td>
+						<td class="text-center">{{ personal_app.user.username }}</td>
+						<td class="text-center">{{ personal_app.character_name }}</td>
+						<td class="text-center">{{ personal_app.corp.corporation_name }}</td>
+						<td class="text-center">
+							{% if personal_app.reviewer_inprogress_character != None %}
+								<div class="panel panel-warning" role="alert">In Progress</div>
+							{% elif personal_app.approved_denied == None %}
+								<div class="panel panel-warning" role="alert">Pending</div>
+							{% elif  personal_app.approved_denied == True %}
+								<div class="panel panel-success" role="alert">Approved</div>
+							{% else %}
+								<div class="panel panel-danger" role="alert">Rejected</div>
+							{% endif %}
+						</td>
+						<td class="text-center">
+							<a href="/hr_application_personal_view/{{ personal_app.id }}">
+								<button type="button" class="btn btn-primary"><span
+										class="glyphicon glyphicon-eye-open"></span></button>
+							</a>
 
-    {% if perms.auth.human_resources %}
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Application Search</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-signin" role="form"
-                              action={% url 'auth_hrapplication_search' %} method="POST">
-                            {% csrf_token %}
-                            {{ search_form|bootstrap }}
-                            <br/>
-                            <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
+							{% if personal_app.approved_denied == None %}
+								<a href="/hr_application_personal_removal/{{ personal_app.id }}">
+									<button type="button" class="btn btn-danger"><span
+											class="glyphicon glyphicon-remove"></span></button>
+								</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		
+		{% if perms.auth.human_resources %}
+			<h1 class="page-header text-center">Application Management
+				<div class="text-right">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+						Search Applications
+					</button>
+				</div>
+			</h1>
+			<div class="container-fluid">
+				<table id="app2" class="tablesorter table table-bordered">
+					<thead>
+					<tr>
+						<th class="text-center">Application ID</th>
+						<th class="text-center">Username</th>
+						<th class="text-center">Main Character</th>
+						<th class="text-center">Corporation</th>
+						<th class="text-center">Status</th>
+						<th class="text-center">Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for app in applications %}
+						<tr>
+							<td class="text-center">{{ app.id }}</td>
+							<td class="text-center">{{ app.user.username }}</td>
+							<td class="text-center">{{ app.character_name }}</td>
+							<td class="text-center">{{ app.corp.corporation_name }}</td>
+							<td class="text-center">
+								{% if app.reviewer_inprogress_character != None and app.approved_denied == None %}
+									<div class="panel panel-warning" role="alert">In Progress</div>
+								{% elif app.approved_denied == None %}
+									<div class="panel panel-warning" role="alert">Pending</div>
+								{% elif  app.approved_denied == True %}
+									<div class="panel panel-success" role="alert">Approved</div>
+								{% else %}
+									<div class="panel panel-danger" role="alert">Rejected</div>
+								{% endif %}
+							</td>
+							<td class="text-center">
+								<a href="/hr_application_view/{{ app.id }}">
+									<button type="button" class="btn btn-primary"><span
+											class="glyphicon glyphicon-eye-open"></span></button>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+	</div>
+
+	{% if perms.auth.human_resources %}
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			 aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+								class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">Application Search</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-signin" role="form"
+							  action={% url 'auth_hrapplication_search' %} method="POST">
+							{% csrf_token %}
+							{{ search_form|bootstrap }}
+							<br/>
+							<button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+						</form>
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+<script type="text/javascript">
+$(document).ready(function() 
+	{ 
+		$("#app1").tablesorter(); 
+	} 
+);
+$(document).ready(function() 
+	{ 
+		$("#app2").tablesorter(); 
+	} 
+);
+</script>
 {% endblock content %}

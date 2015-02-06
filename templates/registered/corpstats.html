@@ -7,7 +7,7 @@
     <div class="col-lg-12">
         <h1 class="page-header text-center">Corporation Stats</h1>
         {% if perms.auth.alliance_member %}
-            <div class="col-lg-12 container" id="example">
+            <div class="col-lg-12 container-fluid" id="example">
 
                 <div class="row">
                     <div class="col-lg-12">
@@ -20,12 +20,12 @@
                                                                             "https://image.eveonline.com/Corporation/{{ corp.corporation_id }}_128.png">
                                 </div>
 
-                                <div class="col-lg-7 col-sm-2">
+                                <div class="col-lg-7 ">
                                     <h4 class="">Name: {{ corp.corporation_name }}</h4>
 
                                     <p>Ticker: {{ corp.corporation_ticker }}</p>
 
-                                    <p>Memeber: {{ corp.member_count }}</p>
+                                    <p>Member: {{ corp.member_count }}</p>
 
                                     <p>Total Authed Members: {{ currentCount }}</p>
                                 </div>
