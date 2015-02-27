@@ -13,11 +13,7 @@
             <h1 class="page-header text-center">Personal Applications
                 <div class="text-right">
                     <a href="{% url 'auth_hrapplication_create_view' %}">
-                        {% if personal_app %}
-                            <button type="button" class="btn btn-success" disabled>Create Application</button>
-                        {% else %}
                             <button type="button" class="btn btn-success">Create Application</button>
-                        {% endif %}
                     </a>
                 </div>
             </h1>
